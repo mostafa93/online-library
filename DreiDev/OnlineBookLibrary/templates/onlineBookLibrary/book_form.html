@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Create Book</title>
+</head>
+<body>
+
+	<form method="post" action="">{% csrf_token %}
+			{{ form.errors }}
+        	Book Name: {{ form.book_title }}<br>
+        	Book Author: {{ form.book_author }}<br>
+        	<input type="text" hidden name='library' id='library' value={{ library.id }}>
+    	<input type="submit" value="Create Book" />
+	</form>
+	<a href="{% url 'home' %}"> return to home page </a>
+</body>
+</html>

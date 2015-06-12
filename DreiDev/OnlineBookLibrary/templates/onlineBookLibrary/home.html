@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	hello world
+	<br>
+	{% if messages %}
+		<ul class="messages">
+    		{% for message in messages %}
+    			<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+   				{% endfor %}
+		</ul>
+	{% endif %}
+	{% if user.is_authenticated %}
+		hi {{ user.username }}
+		<br><a href="{% url "user-logout" %}"> logout </a>
+	{% else %}
+		<form method="post" action="">{% csrf_token %}
+        	{{ form.as_p }}
+    		<input type="submit" value="login" />
+		</form>
+		<a href="{% url "user-new" %}">register</a>
+	{% endif %}
+	<br>
+	{% if not lib %}
+		<a href="{% url "library-new" %}"> Create Your Library </a><br>
+	{% else %}
+		<a href="{% url "library-detail" lib.slug %}"> View Your Library</a><br>
+	{% endif %}
+	<a href="{% url "library-list" %}"> Library List </a>
+</body>
+</html>

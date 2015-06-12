@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{% load custom_tags %}
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<ul>
+        {% for library in object_list %}
+           <li><font size="6"><a href="{% url 'library-detail' library.slug %}">{{ library.library_name }}</a></font></li>
+        	<font size = "5">&nbsp;&nbsp;owner:</font> {{ library.library_owner }}
+          <br><br>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Create Library</title>
+</head>
+<body>
+
+	<form method="post" action="">{% csrf_token %}
+			{{ form.errors }}
+        	{{ form.library_name }}<br>
+        	<input type="text" hidden name='library_owner' id='library_owner' value={{ user.id }}>
+    	<input type="submit" value="Create Library" />
+	</form>
+	<a href="{% url 'home' %}"> return to home page </a>
+</body>
+</html>
