@@ -7,7 +7,7 @@
 	<font size="8"><center>{{ object.library_name }}</center></font>
 	<center>owner: {{ object.library_owner }}</center>
 	{% if user = object.library_owner %}
-		<font size="5"><a href="{% url 'book-create' object.slug %}">Add Books To Your Library</a></font>
+		<font size="5"><a href="{% url 'book-create' object.slug %}?next={% url 'library-detail' object.slug %}">Add Books To Your Library</a></font>
 	{% endif %}
 </body>
 </html>
