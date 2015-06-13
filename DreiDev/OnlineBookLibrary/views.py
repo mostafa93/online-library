@@ -89,7 +89,7 @@ class LibraryView(DetailView):
         context = super(DetailView, self).get_context_data(**kwargs)
         
         book_list = Book.objects.filter(library_id=lib.id)
-        paginator = Paginator(book_list, 1)
+        paginator = Paginator(book_list, 5)
         page = self.request.GET.get('page')
         try:
             books = paginator.page(page)

@@ -7,17 +7,39 @@
 	<font size="8"><center>{{ object.library_name }}</center></font>
 	<center>owner: {{ object.library_owner }}</center>
 	{% if user = object.library_owner %}
-		<font size="5"><a href="{% url 'book-create' object.slug %}?next={% url 'library-detail' object.slug %}">Add Books To Your Library</a></font>
+		<font size="5"><a href="{% url 'book-create' object.slug %}?next={% url 'library-detail' object.slug %}">Add Books To Your Library</a></font><br><br>
 	{% endif %}
 	{% if books %}
 		{% for book in books %}
+				<ul>
 	            <li>{{ book.book_title }}</li>
 	            
-	          by: {{ book.book_author }}
-	          <br>
+	         	 by: {{ book.book_author }}
+	         	 <br>
+	         	 </ul>
 	    {% endfor %}
+	{% else %}
+		<div style="position: fixed; bottom: 50%; width:100%; text-align: center">
+    		<font><b>There Library currently has no books.</b></font>
+   		 </div>
 	{% endif %}
+	 <div class="pagination" style="position: fixed; bottom: 0; width:100%; text-align: center">
+    	<span>
+    		{% if books.has_previous %}
+    		    <a href="?page={{ books.previous_page_number }}">previous</a>
+    		{% endif %}
 
+    	<span class="current">
+    		Page {{ books.number }} of {{ books.paginator.num_pages }}
+    	</span>
+    		{% if books.has_next %}
+    		    <a href="?page={{ books.next_page_number }}">next</a>
+    		{% endif %}
+
+    	</span><br>
+    	<a href="{% url 'home' %}">home</a>
+    </div>
+    
 <!--     <div style="position: absolute; bottom: 9px">
     TEST (C) 2010
     </div> -->
