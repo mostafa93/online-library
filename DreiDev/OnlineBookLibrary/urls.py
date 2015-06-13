@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 from OnlineBookLibrary.views import(
     HomeView, UserRegisteration, LibraryCreation,
     LibraryList, LibraryView, BookCreate
-    )
+)
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='home'),

@@ -7,11 +7,47 @@
 
 	<form method="post" action="">{% csrf_token %}
 			{{ form.errors }}
-        	Book Name: {{ form.book_title }}<br>
-        	Book Author: {{ form.book_author }}<br>
-        	<input type="text" hidden name='library' id='library' value={{ library.id }}>
+			{{ formset.management_form }}
+			 <table>
+        		{% for form in formset %}
+        			Book Name: {{ form.book_title }}<br>
+        			Book Author: {{ form.book_author }}<br>
+        			{{ form.library }}
+        			<br><br>
+      			{% endfor %}
+   			 </table>
     	<input type="submit" value="Create Book" />
 	</form>
 	<a href="{% url 'home' %}"> return to home page </a>
 </body>
 </html>
+
+
+
+
+<!-- <form class="form-horizontal form-inline" method="post">
+  {% csrf_token %}
+  <legend>Add Books</legend>
+  {{ formset.management_form }}
+  <legend>Books</legend>
+  <div class="books">
+    {% for book_form in formset %}
+      <div id="book-{{ forloop.counter0 }}">
+        {{ book_form }}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="form-actions">
+     <a href="#" class="add-book" id='add-book-form'>Add Book</a>
+     <button type="submit" class="btn btn-primary">Submit</button>
+   </div>
+ </form>
+ -->
+ <!--script type="text/html" id="book_form">
+//   <div id="book-<%= id %>">
+//     <label for="id_books-<%= id %>-title">Book Title:</label>
+//     <input id="id_books-<%= id %>-title" type="text" name="books-<%= id %>-title" maxlength="100">
+//     <input type="hidden" name="books-<%= id %>-author" id="id_books-<%= id %>-author">
+//     <input type="hidden" name="books-<%= id %>-id" id="id_books-<%= id %>-id">
+//   </div>
+// </script-->
