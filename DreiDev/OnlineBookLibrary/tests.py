@@ -1,5 +1,5 @@
 from django.test import TestCase
-from OnlineBookLibrary.models import Library
+from OnlineBookLibrary.models import Library, Book
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
@@ -87,3 +87,25 @@ class Libraries(TestCase):
             response.context['library_list'][1].library_name,
             'alef book store')
 
+
+class Books(TestCase):
+    def test_book_list_view(self):
+        user = User.objects.create_user(username='mostafa', password='thekey')
+        library = Library.objects.create(
+            library_name='kotob khan', library_owner_id=user.id)
+        Book.objects.create(book_title='A Thousand Splendid Suns',
+                            book_author='Khaled Hosseini',
+                            library_id=library.id)
+
+        Book.objects.create(book_title='The Fault In Our Stars',
+                            book_author='John Green',
+                            library_id=library.id)
+
+        response = self.client.get(reverse(
+            'library-detail', kwargs={'slug': library.slug}))
+        print response
+        self.assertEquals(
+            response.context['books'][0].book_title,
+            'A Thousand Splendid Suns')
+        self.assertEquals(
+            response.context['books'][1].book_title, 'The Fault In Our Stars')
