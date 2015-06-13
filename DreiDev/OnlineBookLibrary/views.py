@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.forms import AuthenticationForm
 from OnlineBookLibrary.forms import UserCreateForm
 from django.contrib.auth import authenticate, login, views
@@ -83,6 +84,22 @@ class LibraryList(ListView):
 class LibraryView(DetailView):
     model = Library
 
+    def get_context_data(self, **kwargs):
+        lib = Library.objects.get(slug=self.kwargs['slug'])
+        context = super(DetailView, self).get_context_data(**kwargs)
+        
+        book_list = Book.objects.filter(library_id=lib.id)
+        paginator = Paginator(book_list, 1)
+        page = self.request.GET.get('page')
+        try:
+            books = paginator.page(page)
+        except PageNotAnInteger:
+                books = paginator.page(1)
+        except EmptyPage:
+                books = paginator.page(paginator.num_pages)
+        context['books'] = books
+        return context
+
 
 class BookCreate(CreateView):
     model = Book
@@ -108,7 +125,7 @@ class BookCreate(CreateView):
         lib = Library.objects.get(slug=self.kwargs['slug'])
         BookFormSet = modelformset_factory(Book, extra=2, form=create_Book)
         formset = BookFormSet(request.POST)
-        if formset.is_valid():
+        if formset.is_valid():  
             formset.save()
             return HttpResponseRedirect(reverse('home'))
         return render(

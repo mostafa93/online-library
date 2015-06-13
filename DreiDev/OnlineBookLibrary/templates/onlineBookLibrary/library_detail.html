@@ -9,5 +9,17 @@
 	{% if user = object.library_owner %}
 		<font size="5"><a href="{% url 'book-create' object.slug %}?next={% url 'library-detail' object.slug %}">Add Books To Your Library</a></font>
 	{% endif %}
+	{% if books %}
+		{% for book in books %}
+	            <li>{{ book.book_title }}</li>
+	            
+	          by: {{ book.book_author }}
+	          <br>
+	    {% endfor %}
+	{% endif %}
+
+<!--     <div style="position: absolute; bottom: 9px">
+    TEST (C) 2010
+    </div> -->
 </body>
 </html>
