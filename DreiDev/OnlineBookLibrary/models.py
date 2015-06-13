@@ -17,13 +17,13 @@ class Library(models.Model):
         return self.library_name
 
     def get_absolute_url(self):
-        return reverse("book_url", kwargs={"self": self.slug})
+        return reverse("library-detail", kwargs={"slug": self.slug})
 
 
 class Book(models.Model):
     library = models.ForeignKey(Library)
-    book_title = models.CharField(max_length=128)
-    book_author = models.CharField(max_length=64)
+    book_title = models.CharField(max_length=128, unique=True)
+    book_author = models.CharField(max_length=64, unique=False)
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
@@ -32,3 +32,6 @@ class Book(models.Model):
 
     def __unicode__(self):
         return self.book_title
+
+    def get_absolute_url(self):
+        return reverse("book-detail", kwargs={"slug": self.slug})

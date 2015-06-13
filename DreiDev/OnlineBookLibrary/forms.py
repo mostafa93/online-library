@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from OnlineBookLibrary.models import Book
 
 
 class UserCreateForm(UserCreationForm):
@@ -16,3 +17,9 @@ class UserCreateForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class create_Book(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = ['book_title', 'book_author', 'library']

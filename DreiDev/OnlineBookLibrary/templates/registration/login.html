@@ -4,9 +4,9 @@
 	<title></title>
 </head>
 <body>
-{% if user.is_authenticated %}
-		hi {{ user.name }}
-{% endif %}
-askdja;
+	<form method="post" action="">{% csrf_token %}
+        {{ form.as_p }}
+    	<input type="submit" value="login" />
+	</form>
 </body>
 </html>

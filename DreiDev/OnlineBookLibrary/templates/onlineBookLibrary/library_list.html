@@ -5,6 +5,11 @@
 	<title></title>
 </head>
 <body>
+	{% if not user.is_authenticated %}
+		<a href="{% url 'user-login' %}?next={{request.path}}">Log In</a>
+	{% else %}
+		<a href="{% url "user-logout" %}"> logout </a>
+	{% endif %}
 	<ul>
         {% for library in object_list %}
            <li><font size="6"><a href="{% url 'library-detail' library.slug %}">{{ library.library_name }}</a></font></li>

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-# from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
 from OnlineBookLibrary.forms import UserCreateForm
 from django.contrib.auth import authenticate, login, views
@@ -7,8 +7,11 @@ from OnlineBookLibrary.models import Library, Book
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 # from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
+from django.forms.models import modelformset_factory
+from OnlineBookLibrary.forms import create_Book
+from django import forms
 
 
 class LoginRequiredMixin(object):
@@ -59,9 +62,7 @@ class UserRegisteration(TemplateView):
                 username=request.POST['username'],
                 password=request.POST['password1'])
             login(request, user)
-            return render(
-                request,
-                'home.html')
+            return HttpResponseRedirect(reverse('home'))
         return render(
             request,
             'user-registeration.html', {'form': form})
@@ -69,8 +70,9 @@ class UserRegisteration(TemplateView):
 
 class LibraryCreation(LoginRequiredMixin, CreateView):
     model = Library
-    fields = ['library_owner', 'library_name']
+    fields = ['library_name', 'library_owner']
     success_url = reverse_lazy('home')
+    template_name = 'library_form.html'
     # fail_url = reverse_lazy('home')
 
 
@@ -84,7 +86,6 @@ class LibraryView(DetailView):
 
 class BookCreate(CreateView):
     model = Book
-    fields = ['library', 'book_title', 'book_author']
     success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
@@ -92,3 +93,23 @@ class BookCreate(CreateView):
         context = super(BookCreate, self).get_context_data(**kwargs)
         context['library'] = lib
         return context
+
+    def get(self, request, *args, **kwargs):
+        lib = Library.objects.get(slug=self.kwargs['slug'])
+        BookFormSet = modelformset_factory(Book, extra=2, form=create_Book)
+        formset = BookFormSet(queryset=Book.objects.none())
+        for form in formset.forms:
+                form.initial['library'] = lib.id
+                form.fields['library'].widget = forms.HiddenInput()
+        return render(
+            request, 'book_form.html', {'formset': formset, 'library': lib})
+
+    def post(self, request, *args, **kwargs):
+        lib = Library.objects.get(slug=self.kwargs['slug'])
+        BookFormSet = modelformset_factory(Book, extra=2, form=create_Book)
+        formset = BookFormSet(request.POST)
+        if formset.is_valid():
+            formset.save()
+            return HttpResponseRedirect(reverse('home'))
+        return render(
+            request, 'book_form.html', {'formset': formset})
